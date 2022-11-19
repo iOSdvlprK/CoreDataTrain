@@ -31,13 +31,6 @@ class CompaniesController: UITableViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleAddCompany))
         
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
-        let newNavBarAppearance = customNavBarAppearance()
-        navigationController?.navigationBar.scrollEdgeAppearance = newNavBarAppearance
-        navigationController?.navigationBar.compactAppearance = newNavBarAppearance
-        navigationController?.navigationBar.standardAppearance = newNavBarAppearance
-        
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
@@ -76,21 +69,5 @@ class CompaniesController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return companies.count
     }
-    
-    @available(iOS 13.0, *)
-    func customNavBarAppearance() -> UINavigationBarAppearance {
-        let appearance = UINavigationBarAppearance()
-        
-        // Apply a light red background
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .lightRed
-        
-        // Apply white colored normal and large titles
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        
-        return appearance
-    }
-    
 }
 

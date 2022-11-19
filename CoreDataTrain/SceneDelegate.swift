@@ -14,6 +14,20 @@ class CustomNavigationController: UINavigationController {
 }
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    @available(iOS 13.0, *)
+    func customNavBarAppearance() -> UINavigationBarAppearance {
+        let appearance = UINavigationBarAppearance()
+        
+        // Apply a light red background
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .lightRed
+        
+        // Apply white colored normal and large titles
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        return appearance
+    }
 
     var window: UIWindow?
 
@@ -22,6 +36,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        UINavigationBar.appearance().prefersLargeTitles = true
+        let newNavBarAppearance = customNavBarAppearance()
+        UINavigationBar.appearance().scrollEdgeAppearance = newNavBarAppearance
+        UINavigationBar.appearance().compactAppearance = newNavBarAppearance
+        UINavigationBar.appearance().standardAppearance = newNavBarAppearance
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         let companiesController = CompaniesController()
