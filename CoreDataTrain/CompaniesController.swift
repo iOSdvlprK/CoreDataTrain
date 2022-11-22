@@ -9,13 +9,7 @@ import UIKit
 import CoreData
 
 class CompaniesController: UITableViewController, CreateCompanyControllerDelegate {
-    
-//    var companies = [
-//        Company(name: "Apple", founded: Date()),
-//        Company(name: "Google", founded: Date()),
-//        Company(name: "Google", founded: Date())
-//    ]
-    
+  
     var companies = [Company]()   // empty array
     
     func didAddCompany(company: Company) {
@@ -23,27 +17,58 @@ class CompaniesController: UITableViewController, CreateCompanyControllerDelegat
         let newIndexPath = IndexPath(row: companies.count - 1, section: 0)
         tableView.insertRows(at: [newIndexPath], with: .automatic)
     }
-    
-//    func addCompany(company: Company) {
-////        let tesla = Company(name: "Tesla", founded: Date())
+
+//    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { _, indexPath in
+//            let company = self.companies[indexPath.row]
+//            print("Attempting to delete company:", company.name ?? "")
 //
-//        // 1 - modify your array
-//        companies.append(company)
-//        // 2 - insert a new index path into tableView
-//        let newIndexPath = IndexPath(row: companies.count - 1, section: 0)
-//        tableView.insertRows(at: [newIndexPath], with: .automatic)
-//    }
-    
-    private func fetchCompanies() {
-        // attempt my core data fetch somehow..
-        // initialization of our Core Data stack
-//        let persistentContainer = NSPersistentContainer(name: "CoreDataTrain")
-//        persistentContainer.loadPersistentStores { storeDescription, err in
-//            if let err = err {
-//                fatalError("Loading of store failed: \(err)")
+//            // remove the company from our tableview
+//            self.companies.remove(at: indexPath.row)
+//            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+//
+//            // delete the company from Core Data
+//            let context = CoreDataManager.shared.persistentContainer.viewContext
+//            context.delete(company)
+//            do {
+//                try context.save()
+//            } catch let saveErr {
+//                print("Failed to delete company:", saveErr)
 //            }
 //        }
-//        let context = persistentContainer.viewContext
+//        let editAction = UITableViewRowAction(style: .normal, title: "Edit") { _, indexPath in
+//            print("Editing company...")
+//        }
+//        return [deleteAction, editAction]
+//    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, view, bool in
+            let company = self.companies[indexPath.row]
+            print("Attempting to delete company:", company.name ?? "")
+            
+            // remove the company from our tableview
+            self.companies.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+            // delete the company from Core Data
+            let context = CoreDataManager.shared.persistentContainer.viewContext
+            context.delete(company)
+            do {
+                try context.save()
+            } catch let saveErr {
+                print("Failed to delete company:", saveErr)
+            }
+        }
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { action, view, bool in
+            print("Editing company...")
+        }
+        deleteAction.image = UIImage(systemName: "trash")   // using SF Symbols
+        let swipeConfig = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+        return swipeConfig
+    }
+    
+    private func fetchCompanies() {
         let context = CoreDataManager.shared.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<Company>(entityName: "Company")
         do {
