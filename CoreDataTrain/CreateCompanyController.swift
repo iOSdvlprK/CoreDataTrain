@@ -11,13 +11,19 @@ import CoreData
 // Custom Delegation
 protocol CreateCompanyControllerDelegate {
     func didAddCompany(company: Company)
+    func didEditCompany(company: Company)
 }
 
 class CreateCompanyController: UIViewController {
     
+    var company: Company? {
+        didSet {
+            nameTextField.text = company?.name
+        }
+    }
+    
     // not tightly-coupled
     var delegate: CreateCompanyControllerDelegate?
-//    var companiesController: CompaniesController?
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -34,12 +40,18 @@ class CreateCompanyController: UIViewController {
         return textField
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // ternary syntax
+        navigationItem.title = company == nil ? "Create Company" : "Edit Company"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         
-        navigationItem.title = "Create Company"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave))
         
@@ -47,16 +59,29 @@ class CreateCompanyController: UIViewController {
     }
     
     @objc private func handleSave() {
+        if company == nil {
+            createCompany()
+        } else {
+            saveCompanyChanges()
+        }
+    }
+    
+    private func saveCompanyChanges() {
+        let context = CoreDataManager.shared.persistentContainer.viewContext
+        company?.name = nameTextField.text
+        do {
+            try context.save()
+            // save succeeded
+            dismiss(animated: true) {
+                self.delegate?.didEditCompany(company: self.company!)
+            }
+        } catch let saveErr {
+            print("Failed to save company changes:", saveErr)
+        }
+    }
+    
+    private func createCompany() {
         print("Trying to save company...")
-        
-        // initialization of our Core Data stack
-//        let persistentContainer = NSPersistentContainer(name: "CoreDataTrain")
-//        persistentContainer.loadPersistentStores { storeDescription, err in
-//            if let err = err {
-//                fatalError("Loading of store failed: \(err)")
-//            }
-//        }
-//        let context = persistentContainer.viewContext
         let context = CoreDataManager.shared.persistentContainer.viewContext
         let company = NSEntityDescription.insertNewObject(forEntityName: "Company", into: context)
         company.setValue(nameTextField.text, forKey: "name")
@@ -88,9 +113,7 @@ class CreateCompanyController: UIViewController {
 //        nameLabel.frame = CGRect(x: 0, y: 150, width: view.frame.width, height: 50)
         nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         nameLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 16).isActive = true
-//        nameLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
         nameLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-//        nameLabel.backgroundColor = .yellow
         nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         view.addSubview(nameTextField)
