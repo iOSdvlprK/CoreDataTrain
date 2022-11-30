@@ -82,6 +82,7 @@ class CreateCompanyController: UIViewController, UINavigationControllerDelegate,
     
     let nameTextField: UITextField = {
         let textField = UITextField()
+        textField.textColor = .black
 //        textField.placeholder = "Enter name"
         textField.attributedPlaceholder = NSAttributedString(string: "Enter name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -109,7 +110,7 @@ class CreateCompanyController: UIViewController, UINavigationControllerDelegate,
         
         setupUI()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        setupCancelButton()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave))
         
         view.backgroundColor = .darkBlue
@@ -202,10 +203,6 @@ class CreateCompanyController: UIViewController, UINavigationControllerDelegate,
         datePicker.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
         datePicker.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
         datePicker.bottomAnchor.constraint(equalTo: lightBlueBackgroundView.bottomAnchor).isActive = true
-    }
-    
-    @objc func handleCancel() {
-        dismiss(animated: true, completion: nil)
     }
     
 }

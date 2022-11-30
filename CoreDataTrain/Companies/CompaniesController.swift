@@ -28,7 +28,7 @@ class CompaniesController: UITableViewController {
         
         tableView.register(CompanyCell.self, forCellReuseIdentifier: "cellId")
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleAddCompany))
+        setupPlusButtonInNavBar(selector: #selector(handleAddCompany))
         
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
