@@ -74,6 +74,7 @@ class CreateCompanyController: UIViewController, UINavigationControllerDelegate,
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Name"
+        label.textColor = .black
         // enable autolayout
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -81,7 +82,8 @@ class CreateCompanyController: UIViewController, UINavigationControllerDelegate,
     
     let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter name"
+//        textField.placeholder = "Enter name"
+        textField.attributedPlaceholder = NSAttributedString(string: "Enter name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -90,6 +92,7 @@ class CreateCompanyController: UIViewController, UINavigationControllerDelegate,
         let dp = UIDatePicker()
         dp.preferredDatePickerStyle = .wheels
         dp.datePickerMode = .date
+        dp.overrideUserInterfaceStyle = .light
         dp.translatesAutoresizingMaskIntoConstraints = false
         return dp
     }()
