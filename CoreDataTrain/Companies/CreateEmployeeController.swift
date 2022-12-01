@@ -8,11 +8,61 @@
 import UIKit
 
 class CreateEmployeeController: UIViewController {
+    
+    let nameLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Name"
+        label.textColor = .black
+        // enable autolayout
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let nameTextField: UITextField = {
+        let textField = UITextField()
+        textField.textColor = .black
+//        textField.placeholder = "Enter name"
+        textField.attributedPlaceholder = NSAttributedString(string: "Enter name", attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray])
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.title = "Create Employee"
         setupCancelButton()
         view.backgroundColor = .darkBlue
+        setupLightBlueBackgroundView(height: 50)
+        
+        setupUI()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave))
+    }
+    
+    @objc private func handleSave() {
+        guard let employeeName = nameTextField.text else { return }
+        let error = CoreDataManager.shared.createEmployee(employeeName: employeeName)
+        if let error = error {
+            // is where you present an error modal of some kind
+            // perhaps use a UIAlertController to show your error message
+            print(error)
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    private func setupUI() {
+        view.addSubview(nameLabel)
+        nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        nameLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 16).isActive = true
+        nameLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        view.addSubview(nameTextField)
+        nameTextField.leftAnchor.constraint(equalTo: nameLabel.rightAnchor).isActive = true
+        nameTextField.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        nameTextField.bottomAnchor.constraint(equalTo: nameLabel.bottomAnchor).isActive = true
+        nameTextField.topAnchor.constraint(equalTo: nameLabel.topAnchor).isActive = true
     }
 }
