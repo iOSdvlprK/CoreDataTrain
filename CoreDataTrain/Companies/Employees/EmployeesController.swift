@@ -8,6 +8,15 @@
 import UIKit
 import CoreData
 
+// create a UILabel subclass for custom text drawing
+class IndentedLabel: UILabel {
+    override func drawText(in rect: CGRect) {
+        let insets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        let customRect = rect.inset(by: insets)
+        super.drawText(in: customRect)
+    }
+}
+
 class EmployeesController: UITableViewController, CreateEmployeeControllerDelegate {
     
     func didAddEmployee(employee: Employee) {
@@ -23,29 +32,79 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         navigationItem.title = company?.name
     }
     
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let label = UILabel()
+        let label = IndentedLabel()
+        if section == 0 {
+            label.text = "Short names"
+        } else if section == 1 {
+            label.text = "Long names"
+        } else {
+            label.text = "Really long names"
+        }
+        label.backgroundColor = UIColor.lightBlue
+        label.textColor = UIColor.darkBlue
+        label.font = .boldSystemFont(ofSize: 16)
+        return label
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    var shortNameEmployees = [Employee]()
+    var longNameEmployees = [Employee]()
+    var reallyLongNameEmployees = [Employee]()
+    
+    var allEmployees = [[Employee]]()
+    
     private func fetchEmployees() {
-//        print("Trying to fetch employees..")
-//
-//        let context = CoreDataManager.shared.persistentContainer.viewContext
-//        let request = NSFetchRequest<Employee>(entityName: "Employee")
-//        do {
-//            let employees = try context.fetch(request)
-////            employees.forEach { print("Employee name:", $0.name ?? "") }
-//            self.employees = employees
-//        } catch let err {
-//            print("Failed to fetch employees:", err)
-//        }
         guard let companyEmployees = company?.employees?.allObjects as? [Employee] else { return }
-        self.employees = companyEmployees
+//        self.employees = companyEmployees
+        shortNameEmployees = companyEmployees.filter({ employee -> Bool in
+            if let count = employee.name?.count {
+                return count < 6
+            }
+            return false
+        })
+        longNameEmployees = companyEmployees.filter({ employee -> Bool in
+            if let count = employee.name?.count {
+                return count > 6 && count < 9
+            }
+            return false
+        })
+        reallyLongNameEmployees = companyEmployees.filter({ employee in
+            if let count = employee.name?.count {
+                return count > 9
+            }
+            return false
+        })
+        allEmployees = [
+            shortNameEmployees,
+            longNameEmployees,
+            reallyLongNameEmployees
+        ]
+        print(shortNameEmployees.count, longNameEmployees.count, reallyLongNameEmployees.count)
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return allEmployees.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return employees.count
+//        if section == 0 {
+//            return shortNameEmployees.count
+//        }
+//        return longNameEmployees.count
+        return allEmployees[section].count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        let employee = employees[indexPath.row]
+        
+//        let employee = indexPath.section == 0 ? shortNameEmployees[indexPath.row] : longNameEmployees[indexPath.row]
+        let employee = allEmployees[indexPath.section][indexPath.row]
+        
         cell.textLabel?.text = employee.name
         
 //        if let taxId = employee.employeeinformation?.taxId {
@@ -72,6 +131,10 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         tableView.backgroundColor = .darkBlue
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         setupPlusButtonInNavBar(selector: #selector(handleAdd))
+        
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
     }
     
     @objc private func handleAdd() {
