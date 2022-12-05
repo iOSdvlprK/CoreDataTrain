@@ -75,7 +75,7 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         })
         reallyLongNameEmployees = companyEmployees.filter({ employee in
             if let count = employee.name?.count {
-                return count > 9
+                return count >= 9
             }
             return false
         })
