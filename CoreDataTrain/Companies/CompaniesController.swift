@@ -54,6 +54,40 @@ class CompaniesController: UITableViewController {
 //            }
 //        }
     }
+    
+    // let's do some tricky updates with core data
+    @objc private func doUpdates() {
+        print("Trying to update companies on a background context")
+        
+        CoreDataManager.shared.persistentContainer.performBackgroundTask { (backgroundContext) in
+//            let request: NSFetchRequest<Company> = Company.fetchRequest()
+            let request = NSFetchRequest<Company>(entityName: "Company")
+            do {
+                let companies = try backgroundContext.fetch(request)
+                companies.forEach { (company) in
+                    print(company.name ?? "")
+                    company.name = "C: \(company.name ?? "")"
+                }
+                
+                do {
+                    try backgroundContext.save()
+                    // update the UI after a save
+                    DispatchQueue.main.async {
+                        // reset() will forget all of the objects you've fetch before
+                        CoreDataManager.shared.persistentContainer.viewContext.reset()
+                        // you don't want to refetch everything if you just simply update one or two companies
+                        self.companies = CoreDataManager.shared.fetchCompanies()
+                        // is there a way to just merge the changes that you made onto the main view context?
+                        self.tableView.reloadData()
+                    }
+                } catch let saveErr {
+                    print("Failed to save on background:", saveErr)
+                }
+            } catch let err {
+                print("Failed to fetch companies on background:", err)
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +96,7 @@ class CompaniesController: UITableViewController {
         
         navigationItem.leftBarButtonItems = [
             UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(handleReset)),
-            UIBarButtonItem(title: "Do Work", style: .plain, target: self, action: #selector(doWork))
+            UIBarButtonItem(title: "Do Updates", style: .plain, target: self, action: #selector(doUpdates))
         ]
         
         view.backgroundColor = .white
