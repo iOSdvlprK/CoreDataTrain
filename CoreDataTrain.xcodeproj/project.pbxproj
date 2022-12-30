@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D807B448295F1DCB00AE13E8 /* CompaniesAutoUpdateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D807B447295F1DCB00AE13E8 /* CompaniesAutoUpdateController.swift */; };
 		D817B668293504760064A713 /* CompanyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D817B667293504750064A713 /* CompanyCell.swift */; };
 		D82934332928B90C002FBEA2 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82934322928B90C002FBEA2 /* Company.swift */; };
 		D82934352928C1FB002FBEA2 /* CreateCompanyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82934342928C1FB002FBEA2 /* CreateCompanyController.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D807B447295F1DCB00AE13E8 /* CompaniesAutoUpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompaniesAutoUpdateController.swift; sourceTree = "<group>"; };
 		D817B667293504750064A713 /* CompanyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyCell.swift; sourceTree = "<group>"; };
 		D82934322928B90C002FBEA2 /* Company.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
 		D82934342928C1FB002FBEA2 /* CreateCompanyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCompanyController.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 			children = (
 				D81E8D742938EBE30079AB17 /* Employees */,
 				D8CA187B292759F1009627BC /* CompaniesController.swift */,
+				D807B447295F1DCB00AE13E8 /* CompaniesAutoUpdateController.swift */,
 				D8931D8A2936506100D911A8 /* CompaniesController+UITableView.swift */,
 				D817B667293504750064A713 /* CompanyCell.swift */,
 				D82934342928C1FB002FBEA2 /* CreateCompanyController.swift */,
@@ -203,6 +206,7 @@
 				D8931D8B2936506100D911A8 /* CompaniesController+UITableView.swift in Sources */,
 				D87E49752927DF8100352359 /* UIColor+theme.swift in Sources */,
 				D88167962959FA95008B91BE /* EmployeeType.swift in Sources */,
+				D807B448295F1DCB00AE13E8 /* CompaniesAutoUpdateController.swift in Sources */,
 				D8CA1878292759F1009627BC /* AppDelegate.swift in Sources */,
 				D82934332928B90C002FBEA2 /* Company.swift in Sources */,
 				D817B668293504760064A713 /* CompanyCell.swift in Sources */,
