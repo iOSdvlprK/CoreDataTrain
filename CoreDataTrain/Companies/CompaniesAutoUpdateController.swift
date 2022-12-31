@@ -65,21 +65,6 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
         tableView.endUpdates()
     }
     
-//    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        <#code#>
-//    }
-//
-//    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//        <#code#>
-//    }
-    
-//    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-//
-//        if type == .insert {
-//            tableView.insertRows(at: [newIndexPath!], with: .middle)
-//        }
-//    }
-    
     @objc private func handleAdd() {
         print("Let's add a company called BMW")
         
@@ -92,7 +77,7 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
     
     @objc private func handleDelete() {
         let request: NSFetchRequest<Company> = Company.fetchRequest()
-        request.predicate = NSPredicate(format: "name CONTAINS %@", "B")
+//        request.predicate = NSPredicate(format: "name CONTAINS %@", "B")
         let context = CoreDataManager.shared.persistentContainer.viewContext
         let companiesWithB = try? context.fetch(request)
         
@@ -114,13 +99,13 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
         tableView.backgroundColor = UIColor.darkBlue
         tableView.register(CompanyCell.self, forCellReuseIdentifier: cellId)
         
-        fetchedResultsController.fetchedObjects?.forEach({ (company) in
-            print(company.name ?? "")
-        })
-        
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
         }
+        
+//        let service = Service()
+//        service.downloadCompaniesFromServer()
+        Service.shared.downloadCompaniesFromServer()
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
