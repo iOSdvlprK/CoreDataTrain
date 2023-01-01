@@ -113,7 +113,7 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
 //        let employee = indexPath.section == 0 ? shortNameEmployees[indexPath.row] : longNameEmployees[indexPath.row]
         let employee = allEmployees[indexPath.section][indexPath.row]
         
-        cell.textLabel?.text = employee.name
+        cell.textLabel?.text = employee.fullName
         
 //        if let taxId = employee.employeeinformation?.taxId {
 //            cell.textLabel?.text = "\(employee.name ?? "")   \(taxId)"
@@ -121,7 +121,7 @@ class EmployeesController: UITableViewController, CreateEmployeeControllerDelega
         if let birthday = employee.employeeinformation?.birthday {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM dd, yyyy"
-            cell.textLabel?.text = "\(employee.name ?? "")   \(dateFormatter.string(from: birthday))"
+            cell.textLabel?.text = "\(employee.fullName ?? "")   \(dateFormatter.string(from: birthday))"
         }
         
         cell.backgroundColor = .tealColor
